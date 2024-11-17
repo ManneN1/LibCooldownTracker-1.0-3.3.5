@@ -76,11 +76,11 @@ jobs:
 
     - name: Prepare release folder
       run: |
-        # Create a clean folder for the final content
+        # Remove existing folder if it exists
         rm -rf ${{ env.FINAL_FOLDER }}
         mkdir -p ${{ env.FINAL_FOLDER }}
 
-        # Copy the content of the repository to the final folder, excluding repo_name (e.g., GladiusEx-WotLK)
+        # Copy repository contents to the final folder
         find . \
           -type f \
           ! -path "./.github/*" \
@@ -93,8 +93,17 @@ jobs:
           ! -path "./${{ env.REPO_NAME }}/*" \
           -exec cp --parents {} ${{ env.FINAL_FOLDER }}/ \;
 
+        # Rename the final folder to match the desired project name
+        mv ${{ env.FINAL_FOLDER }} "LibCooldownTracker-1.0-Release"
+
         # Remove empty directories
-        find ${{ env.FINAL_FOLDER }} -type d -empty -delete
+        find "LibCooldownTracker-1.0-Release" -type d -empty -delete
+
+    - name: Create release zip
+      run: |
+        # Create the zip with the restructured contents
+        zip -r "${{ env.PROJECT_NAME }}-${{ env.TAG }}.zip" "LibCooldownTracker-1.0-Release"
+
 
     - name: Create release zip
       run: |
