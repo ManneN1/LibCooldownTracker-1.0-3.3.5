@@ -110,7 +110,7 @@ jobs:
 
         if [ -z "$LAST_RELEASE" ]; then
           echo "No previous release found; using initial commit."
-          git log --pretty=format:"* %s" > release-notes.txt
+          echo -e "Content:\n\nInitial release." > release-notes.txt
         else
           echo "Last release: $LAST_RELEASE"
           echo -e "Content:\n" > release-notes.txt
