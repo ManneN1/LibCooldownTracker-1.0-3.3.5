@@ -2,7 +2,7 @@
 Based on [LibCooldownTracker-1.0](https://github.com/vendethiel/LibCooldownTracker-10), thanks Vendethiel and team for the source.
 
 Primary changes:
-- Utilizes GUIDs instead of unitIDs such that it can be utilized by many more AddOns.
+- Utilizes GUIDs instead of unitIDs such that it can be utilized by many more AddOns (maintains backwards compatibility with the old events).
 - Supports cross-platform (RCE-TBC/WotLK, primarily)
 - Built-in spec detection via LibSpecDetection-1.0 (instead of GladiusEx)
 
