@@ -25,8 +25,9 @@ Functions:
         spells_data = lib:GetCooldownsData()
 ```
 ## **Examples**
-```
+```lua
     -- Example 1: Registering a callback and retrieving cooldown data
+
     local function OnCooldownUsed(event, guid, spellid, isEnemy)
         print("Cooldown used: Event =", event, "GUID =", guid, "Spell ID =", spellid, "Is Enemy =", isEnemy)
         
@@ -50,8 +51,10 @@ Functions:
     if success then
         print("Callback registered successfully for myAddOnPrefix")
     end
-
+```
+```lua
     -- Example 2: Iterating over all cooldowns for a specific class and prefix
+
     for spellid, spell_data in lib:IterateCooldowns("MAGE", nil, nil, "myAddOnPrefix") do
         print("Spell ID:", spellid)
         print("Spell cooldown:", spell_data.cooldown)
@@ -60,17 +63,17 @@ Functions:
             print("Spec IDs:", table.concat(spell_data.specID, ", "))
         end
     end
-
+```
+```lua
     -- Example 3: Create a custom spell and update an existing spell definition
 
     -- Define a new custom spell
     local customSpellID = 999999  -- A unique spell ID for the custom spell
     local customSpellData = {
-        name = "Custom Spell",        -- The name of the spell
-        cooldown = 120,              -- Cooldown duration in seconds
-        class = "SHAMAN",            -- Class associated with the spell
-        specID = { 262 },            -- Optional: Spec IDs (Elemental Shaman in this case)
-        sets_cooldown = {            -- Spells affected by this cooldown
+        cooldown = 120,                         -- Cooldown duration in seconds
+        class = "SHAMAN",                       -- Class associated with the spell
+        cooldown_overload = { [262] = 60, },    -- Lower cooldown for Elemental
+        sets_cooldowns = {                      -- Spells affected by this cooldown
             { spellid = 51505, cooldown = 10 }, -- Lava Burst, 10-second cooldown
             { spellid = 32182, cooldown = 300 } -- Heroism, 5-minute cooldown
         },
@@ -83,11 +86,10 @@ Functions:
     -- Update an existing spell definition
     local existingSpellID = 51505  -- Spell ID for Lava Burst
     local updatedSpellData = {
-        name = "Improved Lava Burst", -- Updated name for the spell
         cooldown = 6,                -- Adjusted cooldown duration
         class = "SHAMAN",            -- Class remains the same
-        specID = { 262, 263 },       -- Updated spec IDs for Elemental and Enhancement
-        sets_cooldown = {            -- Update linked cooldowns
+        specID = { 262, 263 },       -- Optional: spell only exists for Elemental and Enhancement
+        sets_cooldowns = {           -- Update linked cooldowns
             { spellid = 999999, cooldown = 120 }, -- Custom Spell, 2-minute cooldown
         },
     }
