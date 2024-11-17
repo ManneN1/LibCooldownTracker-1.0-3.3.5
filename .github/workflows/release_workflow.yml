@@ -76,39 +76,36 @@ jobs:
 
     - name: Prepare release folder
       run: |
-        # Remove existing folder if it exists
+        # Create a clean folder for the project
         rm -rf ${{ env.FINAL_FOLDER }}
         mkdir -p ${{ env.FINAL_FOLDER }}
 
-        # Copy repository contents to the final folder
-        find . \
-          -type f \
-          ! -path "./.github/*" \
-          ! -name ".gitignore" \
-          ! -name ".gitattributes" \
-          ! -name ".gitmodules" \
-          ! -name "*.txt" \
-          ! -name "README*" \
-          ! -path "./.git/*" \
-          ! -path "./${{ env.REPO_NAME }}/*" \
-          -exec cp --parents {} ${{ env.FINAL_FOLDER }}/ \;
+        # Use rsync to copy all repository content into FINAL_FOLDER, while excluding unwanted files
+        rsync -av --exclude='.github/' --exclude='*.txt' --exclude='README*' \
+              --exclude='.git*' --exclude='.gitmodules' ./ ${{ env.FINAL_FOLDER }}/
 
-        # Rename the final folder to match the desired project name
-        mv ${{ env.FINAL_FOLDER }} "LibCooldownTracker-1.0-Release"
+        # Check for any nested duplication of FINAL_FOLDER and remove it
+        if [ -d "${{ env.FINAL_FOLDER }}/${{ env.FINAL_FOLDER }}" ]; then
+          echo "Removing nested duplicate folder..."
+          rm -rf ${{ env.FINAL_FOLDER }}/${{ env.FINAL_FOLDER }}
+        fi
 
-        # Remove empty directories
-        find "LibCooldownTracker-1.0-Release" -type d -empty -delete
-
-    - name: Create release zip
+    - name: Create a zip file with a clean structure
       run: |
-        # Create the zip with the restructured contents
-        zip -r "${{ env.PROJECT_NAME }}-${{ env.TAG }}.zip" "LibCooldownTracker-1.0-Release"
+        # Create a release folder and move FINAL_FOLDER contents into PROJECT_NAME
+        mkdir -p release/${{ env.PROJECT_NAME }}
+        mv ${{ env.FINAL_FOLDER }}/* release/${{ env.PROJECT_NAME }}/
+        rm -rf ${{ env.FINAL_FOLDER }}
 
+        # Create the zip from the release folder, keeping the desired structure
+        cd release
+        zip -r "${{ env.PROJECT_NAME }}-${{ env.TAG }}.zip" "${{ env.PROJECT_NAME }}"
+        mv "${{ env.PROJECT_NAME }}-${{ env.TAG }}.zip" ../
 
-    - name: Create release zip
-      run: |
-        # Zip only the FINAL_FOLDER directory, without any extra nesting
-        zip -r "${{ env.PROJECT_NAME }}-${{ env.TAG }}.zip" "${{ env.FINAL_FOLDER }}"
+        # Cleanup the release folder after zipping
+        cd ..
+        rm -rf release
+
 
     - name: Generate release notes file
       env:
