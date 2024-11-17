@@ -6,8 +6,8 @@
         LCT_CooldownsResetByGUID(guid)
 
     Functions:
-        success = lib:RegisterCallback(self, event, prefix)
-        success = lib:UnregisterCallback(self, event, prefix)
+        success = lib:Subscribe(self, event, prefix)
+        success = lib:Unsubscribe(self, event, prefix)
         tpu = lib:GetUnitCooldownInfo(unitid, spellid, prefix)
         tpu = lib:GetCooldownInfoByGUID(guid, spellid, prefix)
         spellid, spell_data in lib:IterateCooldowns(class, specID, race, prefix)
@@ -36,7 +36,7 @@
     end
 
     -- Register the callback
-    local success = lib:RegisterCallback(self, "LCT_CooldownUsedByGUID", OnCooldownUsed, "myAddOnPrefix")
+    local success = lib:Subscribe(self, "LCT_CooldownUsedByGUID", OnCooldownUsed, "myAddOnPrefix")
     if success then
         print("Callback registered successfully for myAddOnPrefix")
     end
