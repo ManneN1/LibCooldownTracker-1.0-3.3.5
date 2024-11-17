@@ -84,7 +84,7 @@ local customSpellData = {
    
 -- Add the custom spell to the library under a specific prefix
 lib:AddCustomSpell(customSpellID, customSpellData, "myAddOnPrefix")
-print("Custom spell added successfully:", customSpellID, customSpellData.name)
+print("Custom spell added successfully:", GetSpellInfo(customSpellID))
     
 -- Update an existing spell definition
 local existingSpellID = 51505  -- Spell ID for Lava Burst
