@@ -98,7 +98,7 @@ LCT_SpellData[5246] = {
 LCT_SpellData[1161] = {
   cooldown = 600,
   opt_lower_cooldown = 420,
-  cooldown_overload = { [SPEC_MAGE_FIRE] = 420, },
+  cooldown_overload = { [SPEC_WARRIOR_PROT] = 420, },
   class = "WARRIOR",
 }
 
