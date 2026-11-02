@@ -8,11 +8,9 @@
 
 	<Script file="cooldowns_spelldata.lua"/>
 
-	<Script file="cooldowns_tbc_deathknight.lua"/>
 	<Script file="cooldowns_tbc_druid.lua"/>
 	<Script file="cooldowns_tbc_hunter.lua"/>
 	<Script file="cooldowns_tbc_mage.lua"/>
-	<Script file="cooldowns_tbc_monk.lua"/>
 	<Script file="cooldowns_tbc_paladin.lua"/>
 	<Script file="cooldowns_tbc_priest.lua"/>
 	<Script file="cooldowns_tbc_rogue.lua"/>
@@ -26,7 +24,6 @@
 	<Script file="cooldowns_wotlk_druid.lua"/>
 	<Script file="cooldowns_wotlk_hunter.lua"/>
 	<Script file="cooldowns_wotlk_mage.lua"/>
-	<Script file="cooldowns_wotlk_monk.lua"/>
 	<Script file="cooldowns_wotlk_paladin.lua"/>
 	<Script file="cooldowns_wotlk_priest.lua"/>
 	<Script file="cooldowns_wotlk_rogue.lua"/>

@@ -58,10 +58,13 @@
 	sent only to the correct subscriber (callback).
 ]]
 
-local version = 13
+local version = 14
 local lib = LibStub:NewLibrary("LibCooldownTracker-1.0", version)
 
-if not lib then return end
+if not lib then
+    LCT_SpellData = nil
+    return
+end
 
 -- upvalues
 local pairs, type, next, select, assert, unpack = pairs, type, next, select, assert, unpack
@@ -521,27 +524,34 @@ local function CooldownEvent(event, guid, spellid, isEnemy)
 end
 
 
+local activeCooldownEvents = {}
+local enabled = false
+
 local function enable()
+	if enabled then return end
+	enabled = true
 	lib.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 	lib.frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-	lib.frame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
-
-	lib.tracked_players = {}
 end
 
 local function disable()
+	enabled = false
 	lib.frame:UnregisterAllEvents()
+	ClearTimers()
+	wipe(lib.tracked_players)
 end
 
 function lib.callbacks:OnUsed(target, event)
-	if event == "LCT_CooldownUsed" or event == "LCT_CooldownUsedByGUID" then
+	if event:match("LCT_CooldownUsed$") or event:match("LCT_CooldownUsedByGUID$") then
+		activeCooldownEvents[event] = true
 		enable()
 	end
 end
 
 function lib.callbacks:OnUnused(target, event)
-	if event == "LCT_CooldownUsed" or event == "LCT_CooldownUsedByGUID" then
-		disable()
+	if activeCooldownEvents[event] then
+		activeCooldownEvents[event] = nil
+		if not next(activeCooldownEvents) then disable() end
 	end
 end
 
@@ -848,7 +858,7 @@ function events:UNIT_SPELLCAST_SUCCEEDED(event, unit, spellName, rank, lineID, s
 end
 
 function events:COMBAT_LOG_EVENT_UNFILTERED(_, _, event, sourceGUID, e, sourceFlags, d, _, _, spellId)
-    
+	if not sourceGUID or not sourceFlags then return end
 	local isEnemy = false
 	local b = bit.band(sourceFlags, COMBATLOG_OBJECT_REACTION_HOSTILE)
 	isEnemy = b == COMBATLOG_OBJECT_REACTION_HOSTILE
